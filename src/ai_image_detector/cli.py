@@ -18,6 +18,7 @@ def main():
   ai-detect check ./photos/ --json       批量检测并输出 JSON
   ai-detect serve                        启动 Web 界面
   ai-detect serve --port 9000            指定端口启动
+  ai-detect serve --host 127.0.0.1       仅允许本机访问
         """,
     )
     sub = parser.add_subparsers(dest="command")
@@ -29,7 +30,7 @@ def main():
 
     # serve 子命令
     serve_p = sub.add_parser("serve", help="启动 Web 检测界面")
-    serve_p.add_argument("--host", default="127.0.0.1", help="绑定地址 (默认 127.0.0.1)")
+    serve_p.add_argument("--host", default="0.0.0.0", help="绑定地址 (默认 0.0.0.0)")
     serve_p.add_argument("--port", type=int, default=8899, help="端口 (默认 8899)")
 
     args = parser.parse_args()

@@ -22,7 +22,9 @@ uv sync
 # 启动 Web 界面
 uv run python -m ai_image_detector serve
 
-# 浏览器打开 http://127.0.0.1:8899
+# 默认监听 0.0.0.0:8899
+# 本机访问 http://127.0.0.1:8899
+# 局域网访问 http://<本机IP>:8899
 ```
 
 ## CLI 使用

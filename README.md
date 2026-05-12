@@ -51,6 +51,8 @@ uv run python -m ai_image_detector check ./photos/ --json
 
 结果里的“置信度”表示当前证据强度，不等于事实概率。没有检测到证据，也不代表图片一定不是 AI 生成。
 
+更完整的市面方案、证据等级、误判风险和工程落地建议见：[AI 图片检测可靠性说明](docs/ai-image-detection-reliability.md)。
+
 ## 术语说明
 
 ### C2PA

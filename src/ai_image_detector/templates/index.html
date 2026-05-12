@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Image Detector - AI 生成图片检测</title>
+  <meta name="description" content="多维度检测图片是否由 AI 生成，支持元数据分析、频谱检测、统计分析等多种检测方法">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="container">
+    <!-- 头部 -->
+    <header class="header">
+      <div class="header-badge">
+        <span class="dot"></span>
+        多维度分析引擎
+      </div>
+      <h1>AI Image Detector</h1>
+      <p>上传一张图片，通过元数据分析、频谱检测、统计特征三个维度判断是否由 AI 生成</p>
+    </header>
+
+    <!-- 上传区域 -->
+    <div id="upload-section">
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">📷</div>
+        <h3>拖拽图片到这里，或点击选择文件</h3>
+        <p>支持 PNG、JPEG、WebP、BMP 格式，最大 50MB</p>
+        <div class="formats">
+          <span class="format-tag">PNG</span>
+          <span class="format-tag">JPEG</span>
+          <span class="format-tag">WebP</span>
+          <span class="format-tag">BMP</span>
+          <span class="format-tag">TIFF</span>
+        </div>
+        <input type="file" id="file-input" class="upload-input" accept="image/*">
+      </div>
+    </div>
+
+    <!-- 分析中 -->
+    <div class="analyzing" id="analyzing-section">
+      <div class="spinner"></div>
+      <h3>正在分析图片…</h3>
+      <p>元数据扫描 · 频谱分析 · 统计特征提取</p>
+    </div>
+
+    <!-- 结果区域 -->
+    <div class="result-section" id="result-section">
+      <!-- 判定卡片 -->
+      <div class="verdict-card" id="verdict-card">
+        <div class="verdict-icon" id="verdict-icon">🔍</div>
+        <div class="verdict-title" id="verdict-title">检测中…</div>
+        <div class="verdict-subtitle" id="verdict-subtitle"></div>
+        <div class="confidence-bar-wrap">
+          <div class="confidence-label">
+            <span>AI 概率</span>
+            <span id="confidence-pct">0%</span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill" id="confidence-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 三维评分 -->
+      <div class="scores-grid">
+        <div class="score-card">
+          <div class="score-label">📋 元数据分析</div>
+          <div class="score-value" id="score-metadata">0%</div>
+          <div class="score-bar"><div class="score-bar-fill" id="score-metadata-bar" style="width:0%"></div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">📊 频谱分析</div>
+          <div class="score-value" id="score-spectrum">0%</div>
+          <div class="score-bar"><div class="score-bar-fill" id="score-spectrum-bar" style="width:0%"></div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">📈 统计分析</div>
+          <div class="score-value" id="score-statistical">0%</div>
+          <div class="score-bar"><div class="score-bar-fill" id="score-statistical-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- 文件信息 -->
+      <div class="file-info">
+        <div class="file-info-item">
+          <div class="file-info-label">文件名</div>
+          <div class="file-info-value" id="file-name">-</div>
+        </div>
+        <div class="file-info-item">
+          <div class="file-info-label">大小</div>
+          <div class="file-info-value" id="file-size">-</div>
+        </div>
+        <div class="file-info-item">
+          <div class="file-info-label">尺寸</div>
+          <div class="file-info-value" id="file-dims">-</div>
+        </div>
+        <div class="file-info-item">
+          <div class="file-info-label">分析耗时</div>
+          <div class="file-info-value" id="file-time">-</div>
+        </div>
+      </div>
+
+      <!-- 关键发现 -->
+      <div class="findings-card">
+        <div class="findings-header">🔍 关键发现</div>
+        <div id="findings-list"></div>
+      </div>
+
+      <!-- 详细数据面板 -->
+      <div class="detail-panel">
+        <button class="detail-toggle" type="button">
+          📋 元数据详情 <span class="arrow">▼</span>
+        </button>
+        <div class="detail-body">
+          <table class="detail-table"><tbody id="detail-metadata"></tbody></table>
+        </div>
+      </div>
+
+      <div class="detail-panel">
+        <button class="detail-toggle" type="button">
+          📊 频谱分析详情 <span class="arrow">▼</span>
+        </button>
+        <div class="detail-body">
+          <table class="detail-table"><tbody id="detail-spectrum"></tbody></table>
+        </div>
+      </div>
+
+      <div class="detail-panel">
+        <button class="detail-toggle" type="button">
+          📈 统计分析详情 <span class="arrow">▼</span>
+        </button>
+        <div class="detail-body">
+          <table class="detail-table"><tbody id="detail-statistical"></tbody></table>
+        </div>
+      </div>
+
+      <!-- 重新检测 -->
+      <button class="btn-reset" onclick="resetDetection()">🔄 重新检测另一张图片</button>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      <p>AI Image Detector · 基于频谱分析 + 元数据检测 + 统计特征</p>
+      <p style="margin-top:4px">仅供研究和参考使用，检测结果不构成最终判定</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

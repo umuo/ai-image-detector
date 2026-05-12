@@ -22,10 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (files.length > 0) handleFile(files[0]);
   });
 
-  // 点击上传
-  uploadZone.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) handleFile(e.target.files[0]);
+    e.target.value = '';
   });
 
   async function handleFile(file) {
